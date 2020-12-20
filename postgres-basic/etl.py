@@ -6,11 +6,24 @@ from sql_queries import *
 
 
 def process_song_file(cur, filepath):
+    """
+    Inserts relevant information from a json file into two dimension tables,
+    one for songs' information, other for artists' information.
+
+    Parameters
+    ----------
+    cur: psycopg2 cursor
+        Must be already attached to a database
+
+    filepath: String
+        path to a single json file
+
+    """
     # open song file
     df = pd.read_json(filepath, lines=True)
 
     # insert song record
-    song_data = df[['song_id', 'title', 'artist_id', 'year', 'duration']].values.tolist()[0]
+    song_data = df[['song_id', 'title', 'artist_id', 'year', 'duration']].drop_duplicates().values.tolist()[0]
     cur.execute(song_table_insert, song_data)
 
     # insert artist record
@@ -20,6 +33,20 @@ def process_song_file(cur, filepath):
 
 
 def process_log_file(cur, filepath):
+    """
+    Inserts relevant information from a json file into a dimension and a fact table.
+    The fact table contains information about app events, in special songs played.
+    The dimension table contains information about time.
+
+    Parameters
+    ----------
+    cur: psycopg2 cursor
+        Must be already attached to a database
+
+    filepath: String
+        path to a single json file
+
+    """
     # open log file
     df = pd.read_json(filepath, lines=True)
 
@@ -62,7 +89,6 @@ def process_log_file(cur, filepath):
 
         # insert songplay record
         songplay_data = (
-            index,
             pd.to_datetime(row.ts),
             row.userId,
             row.level,
@@ -75,6 +101,25 @@ def process_log_file(cur, filepath):
 
 
 def process_data(cur, conn, filepath, func):
+    """
+    Inserts relevant information from a json file into a dimension and a fact table.
+    The fact table contains information about app events, in special songs played.
+    The dimension table contains information about time.
+
+    Parameters
+    ----------
+    cur: psycopg2 cursor
+        Must be already attached to a database
+
+    conn: postgres connection
+        Necessary to commit cursor execution after table insertions
+
+    filepath: String
+        path to a directory containing data to be processed using func
+
+    func: callable
+        Function that will process data files on the given directory
+    """
     # get all files matching extension from directory
     all_files = []
     for root, dirs, files in os.walk(filepath):
