@@ -5,7 +5,8 @@ This database has been created for a fictional startup called Sparkify. They wan
 # Database Schema and ETL Pipeline
 
 ![schema](rds.jpeg)
-We decided to use a star schema, which 
+We decided to use a star schema, which enables simpler queries in comparison to the snowflake schema, but has some normalization at least in the fact table. 
+As you can see in the `test.ipynb` or in the example queries, it is fairly easy to do complex queries to answer questions about songs played.
 
 State and justify your database schema design and ETL pipeline.
 
@@ -20,4 +21,14 @@ Finally, open the notebook `test.ipynb` and run all cells to get a grasp on the 
 
 ## Example queries
 
-[Optional] Provide example queries and results for song play analysis.
+For example, to get the five most-heard artists we can run
+
+```SQL
+SELECT name as artist, time_played FROM (
+    SELECT songs.artist_id, SUM(duration) as time_played FROM
+    songplays JOIN songs ON songplays.song_id=songs.song_id
+    GROUP BY songs.artist_id) as song_durations
+JOIN artists ON song_durations.artist_id=artists.artist_id
+ORDER BY time_played
+LIMIT 5;
+```
