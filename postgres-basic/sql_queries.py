@@ -72,6 +72,8 @@ artist_id,
 session_id,
 location,
 user_agent) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+ON CONFLICT (songplay_id) 
+DO NOTHING;
 """)
 
 user_table_insert = ("""
@@ -81,6 +83,8 @@ first_name,
 last_name,
 gender,
 level) VALUES (%s,%s,%s,%s,%s)
+ON CONFLICT (user_id) 
+DO NOTHING;
 """)
 
 song_table_insert = (""" 
@@ -90,6 +94,8 @@ title,
 artist_id,
 year,
 duration) VALUES (%s, %s, %s, %s, %s)
+ON CONFLICT (song_id) 
+DO NOTHING;
 """)
 
 artist_table_insert = ("""
@@ -99,6 +105,8 @@ name,
 location,
 latitude,
 longitude) values (%s, %s, %s, %s, %s)
+ON CONFLICT (artist_id) 
+DO NOTHING;
 """)
 
 
@@ -111,6 +119,8 @@ week,
 month, 
 year, 
 weekday) values (%s, %s, %s, %s, %s, %s, %s)
+ON CONFLICT (start_time) 
+DO NOTHING;
 """)
 
 # FIND SONGS
