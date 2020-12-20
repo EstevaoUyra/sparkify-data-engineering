@@ -8,8 +8,6 @@ This database has been created for a fictional startup called Sparkify. They wan
 We decided to use a star schema, which enables simpler queries in comparison to the snowflake schema, but has some normalization at least in the fact table. 
 As you can see in the `test.ipynb` or in the example queries, it is fairly easy to do complex queries to answer questions about songs played.
 
-State and justify your database schema design and ETL pipeline.
-
 
 # How to run the project
 
