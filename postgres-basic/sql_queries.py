@@ -10,13 +10,13 @@ time_table_drop = "DROP TABLE IF EXISTS time;"
 
 songplay_table_create = ("""
 CREATE TABLE songplays (
-    songplay_id VARCHAR PRIMARY KEY, 
+    songplay_id SERIAL PRIMARY KEY, 
     start_time TIMESTAMP,
-    user_id VARCHAR,
+    user_id VARCHAR NOT NULL,
     level VARCHAR,
     song_id VARCHAR,
     artist_id VARCHAR,
-    session_id VARCHAR,
+    session_id VARCHAR NOT NULL,
     location VARCHAR,
     user_agent VARCHAR );
 """)
@@ -27,13 +27,13 @@ CREATE TABLE users (
     first_name VARCHAR,
     last_name VARCHAR, 
     gender VARCHAR, 
-    level VARCHAR);
+    level VARCHAR NOT NULL);
 """)
 
 song_table_create = ("""
 CREATE TABLE songs (
     song_id VARCHAR PRIMARY KEY, 
-    title VARCHAR, 
+    title VARCHAR NOT NULL, 
     artist_id VARCHAR, 
     year INT, 
     duration FLOAT);
@@ -42,7 +42,7 @@ CREATE TABLE songs (
 artist_table_create = ("""
 CREATE TABLE artists (
    artist_id VARCHAR PRIMARY KEY, 
-   name VARCHAR, 
+   name VARCHAR NOT NULL, 
    location VARCHAR, 
    latitude FLOAT, 
    longitude FLOAT);
@@ -63,7 +63,6 @@ CREATE TABLE time (
 
 songplay_table_insert = ("""
 INSERT INTO songplays (
-songplay_id,
 start_time,
 user_id,
 level,
@@ -71,9 +70,7 @@ song_id,
 artist_id,
 session_id,
 location,
-user_agent) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
-ON CONFLICT (songplay_id) 
-DO NOTHING;
+user_agent) VALUES (%s, %s, %s, %s, %s, %s, %s, %s);
 """)
 
 user_table_insert = ("""
@@ -84,7 +81,7 @@ last_name,
 gender,
 level) VALUES (%s,%s,%s,%s,%s)
 ON CONFLICT (user_id) 
-DO NOTHING;
+DO UPDATE SET level=EXCLUDED.level;
 """)
 
 song_table_insert = (""" 
